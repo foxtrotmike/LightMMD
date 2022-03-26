@@ -32,7 +32,7 @@ def mmd_rbf(x, y, sigma):
     return torch.mean(Kxx) + torch.mean(kyy) - 2*torch.mean(kxy)
   
 
-def mmd_fourier(x1, x2, sigma, dim_r=1024):
+def mmd_fourier(x1, x2, sigma, dim_r=1024): #CPU based approximation
     """
     Approximate RBF kernel by random features
     """
