@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Mar 25 09:51:11 2022
-Private code file. 
+Private code file. No rights shared.
 For information, contact: fayyaz.minhas@warwick.ac.uk
 @author: fayya
 """
@@ -70,7 +70,7 @@ def compare_mmd_estimators(p, q):
 dd = 10
 nn = 320
 p = torch.randn((nn,dd))
-q = 3 + torch.randn((nn,dd))
+q = 8 + torch.randn((nn,dd))
 a,b,sigmas = compare_mmd_estimators(p, q)
 
 import matplotlib.pyplot as plt
@@ -101,6 +101,7 @@ class LightMMD:
         Xenc = self.encoder.transform(X)
         start = timer()
         self.random_mapping = OPUMap(n_components=self.n_components, linear = False,ndims=1, simulated = False, max_n_features=Xenc.shape[1]).fit(Xenc)        
+        self.random_mapping.opu.open()
         end = timer()
         print("OPUMap Fit Time",end - start) 
         return self
