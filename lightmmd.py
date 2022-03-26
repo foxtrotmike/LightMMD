@@ -100,8 +100,11 @@ class LightMMD:
 
         Xenc = self.encoder.transform(X)
         start = timer()
-        self.random_mapping = OPUMap(n_components=self.n_components, linear = False,ndims=1, simulated = False, max_n_features=Xenc.shape[1]).fit(Xenc)        
-        self.random_mapping.opu.open()
+        
+        self.random_mapping = OPUMap(n_components=self.n_components, linear = False,ndims=1, simulated = False, max_n_features=Xenc.shape[1])
+        
+        self.random_mapping.fit(Xenc)        
+        
         end = timer()
         print("OPUMap Fit Time",end - start) 
         return self
@@ -129,6 +132,7 @@ mmd = LightMMD().fit(np.vstack((p,q)))
 G = sigmas#[0.00001,0.0001,0.001,0.01,0.1,1.0,2.0,4.0,8.0,16.0]
 D = []
 start = timer()
+mmd.random_mapping.opu.open()
 for s in sigmas:
     g = 1/(2*((s)**2))
     d = mmd.mmd(p,q,gamma = g)
