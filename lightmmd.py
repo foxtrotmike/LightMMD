@@ -32,7 +32,7 @@ def mmd_rbf(x, y, sigma):
     return torch.mean(Kxx) + torch.mean(kyy) - 2*torch.mean(kxy)
   
 
-def mmd_fourier(x1, x2, sigma, dim_r=1024): #CPU based approximation
+def mmd_fourier(x1, x2, sigma, dim_r=1024):
     """
     Approximate RBF kernel by random features
     """
@@ -91,7 +91,7 @@ class LightMMD:
     def __init__(self, ):
         pass
 
-    def fit(self,X, bits_per_feature = 16, n_components = 1000000):        
+    def fit(self,X, bits_per_feature = 16, n_components = 4096):        
         self.n_features = X.shape[1]
         self.bits_per_feature = bits_per_feature
         
@@ -99,7 +99,10 @@ class LightMMD:
         self.encoder = MultiThresholdEncoder(thresholds='linspace', n_bins=bits_per_feature, columnwise=False).fit(X)#EncoderDecoder(self.n_features, self.n_features * self.bits_per_feature)
 
         Xenc = self.encoder.transform(X)
+        start = timer()
         self.random_mapping = OPUMap(n_components=self.n_components, linear = False,ndims=1, simulated = False, max_n_features=Xenc.shape[1]).fit(Xenc)        
+        end = timer()
+        print("OPUMap Fit Time",end - start) 
         return self
     def mmd(self,p,q,gamma = 1.0):
         def preprocess(x):
@@ -107,7 +110,7 @@ class LightMMD:
             start = timer()
             xt = self.random_mapping.transform(xe)
             end = timer()
-            print("Step Time",end - start) 
+            print("Transform Time",end - start) 
             xt = xt*np.sqrt(gamma)#*x.shape[1]            
             #import pdb;pdb.set_trace()
             f = np.hstack((np.cos(xt),np.sin(xt)))
