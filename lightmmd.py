@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Mar 25 09:51:11 2022
-
+Private code file. 
+For information, contact: fayyaz.minhas@warwick.ac.uk
 @author: fayya
 """
 
